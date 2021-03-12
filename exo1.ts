@@ -6,16 +6,21 @@ import {
   sendToServer
 } from "./cbAPI";
 
-function exo1(req: string) {
-  //let URLS: string[] = [];
-  searchImages(req, (urlList: string[]) => {
-    //URLS = urlList
-    urlList.forEach(url => getData(url, () => {}));
-  });
-  //ici URLS vaut tableau vide car searchImages n'est pas fini.
-  //URLS.forEach(url => getData(url, ()=>{}))
-  //il faut donc mettre forEach dans searchImages
-}
+function exo1(req: string) {​​
+  searchImages(req, (urls: string[]) => {​​
+    const images: ImageData[] = [];
+    urls.forEach(
+      url => getData(url, img => {​​
+        images.push(img);
+        if (images.length === urls.length) {​​
+          composeMozaic(images, imgM => {​​
+            sendToServer(imgM, r => log(r) )
+          }​​)
+        }​​
+      }​​)
+    );
+  }​​);
+}​​
 
 const bt1 = document.querySelector("#bt1") as HTMLElement;
 bt1.onclick = () => exo1("chats");
